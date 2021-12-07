@@ -15,25 +15,28 @@ const { Title } = Typography;
 
 
 const TaskCreatePage = () => {
-    const [formValues, setFormValues] = useState({concluida: false, titulo: ''})
+    const [formValues, setFormValues] = useState({ titulo: '', concluida: false })
     const [loading, setLoading] = useState(false);
 
-    const handleSubscription = useCallback(async () => {
+    const TaskCreatePage = () => {
         try {
             setLoading(true);
-            console.log({ formValues });
+
             const { titulo, concluida } = formValues;
-            // console.log(titulo, concluida);
+
             if (!titulo) return;
 
             const body = {
                 titulo: titulo,
                 concluida: concluida
             }
+
             await axios.post('/tarefas', body);
+
             Modal.success({
-                title: 'Tarefa cadastrada.',
+                title: 'Tarefa criada com sucesso'
             })
+
         } catch (error) {
             console.warn(error);
             const { response } = error;
@@ -43,32 +46,13 @@ const TaskCreatePage = () => {
                 });
             } else {
                 Modal.error({
-                    title: 'Não foi possível cadastrar, tente novamente mais tarde.'
+                    title: 'Não foi cadastrar-se, tente novamente mais tarde.'
                 })
             }
         } finally {
-            setLoading(false);
+            setLoadsing(false);
         }
-    }, [formValues]);
-
-    const handleInputChange = useCallback((event) => {
-        const { value } = event.target;
-        // console.log({titulo,value});
-        setFormValues({
-            ...formValues,
-            titulo: value,
-        })
-    }, [formValues]);
-
-    const handleInputCheckbox = useCallback((event) => {
-        const { checked } = event.target;
-        console.log(checked);
-        setFormValues({
-            ...formValues,
-            concluida: checked,
-        })
-    }, [formValues])
-
+    }, [formValues]
     return (
         <Content>
             <Row
@@ -77,47 +61,40 @@ const TaskCreatePage = () => {
                 <Col xs={24} sl={14} md={12} lg={10} xl={8}>
                     <Card style={{ margin: 24 }}>
                         <Title
-                            level={3}
-                            type="primary"
+                            type='Primary'
                             style={{ textAlign: 'center', marginTop: 8 }}
                         >
-                            Cadastrar tarefa
+                            Criar Tarefa
                         </Title>
                         <Form layout="vertical">
                             <InputText
-                                name="titulo"
-                                label="Titulo"
+                                name="secondary"
+                                label="Título"
                                 size="large"
-                                onChange={handleInputChange}
+                                // onChange={}
                                 validate={validateTitulo}
-                                disabled={loading}
                                 required
                             />
-                            <Checkbox
-                                title="Concluida"
-                                dataIndex="concluida"
-                                key="concluida"
-                                onChange={handleInputCheckbox}
-                            // render={}
-                            >
-                                Concluida
+                            <Checkbox>
+                                Concluído
                             </Checkbox>
-
                             <Button
                                 block
                                 type="primary"
                                 size="large"
-                                onClick={handleSubscription}
-                                loading={loading}
+                            // onClick={}
+                            // loading={loading}
                             >
                                 Cadastrar
                             </Button>
+
                         </Form>
                     </Card>
                 </Col>
+
             </Row>
         </Content>
-    );
+    )
 }
 
 export default TaskCreatePage;
