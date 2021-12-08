@@ -4,6 +4,8 @@ import {
 } from 'react-router-dom';
 
 import PrivateRoute from '../components/PrivateRoute';
+import CategoryCreatePage from '../pages/CategoryCreatePage';
+import CategoryListPage from '../pages/CategoryListPage';
 import LoginPage from '../pages/LoginPage';
 import SubscriptionPage from '../pages/SubscriptionPage';
 import TaskCreatePage from '../pages/TaskCreatePage';
@@ -15,6 +17,24 @@ const MainLayout = () => {
     <Layout>
 
       <Routes>
+        
+      <Route path="/" element={<Navigate to="/category" />} />
+      <Route path="/category" element={
+          <PrivateRoute>
+            <AppLayout>
+              <CategoryListPage />
+            </AppLayout>
+          </PrivateRoute>
+        } />
+      <Route path="/category/new" element={
+          <PrivateRoute>
+            <AppLayout>
+              <CategoryCreatePage/>
+            </AppLayout>
+          </PrivateRoute>
+        } />
+
+
         <Route path="/" element={<Navigate to="/tasks" />} />
         <Route path="/tasks" element={
           <PrivateRoute>
