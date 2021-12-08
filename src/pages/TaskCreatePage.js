@@ -15,15 +15,15 @@ const { Title } = Typography;
 
 
 const TaskCreatePage = () => {
-    const [formValues, setFormValues] = useState({ titulo: '', concluida: false })
+    const [formValues, setFormValues] = useState({concluida: false, titulo: ''})
+
     const [loading, setLoading] = useState(false);
 
-    const TaskCreatePage = () => {
+    const handleSubscription = useCallback(async () => {
         try {
             setLoading(true);
-
+            console.log({ formValues });
             const { titulo, concluida } = formValues;
-
             if (!titulo) return;
 
             const body = {
@@ -32,12 +32,11 @@ const TaskCreatePage = () => {
             }
 
             await axios.post('/tarefas', body);
-
             Modal.success({
-                title: 'Tarefa criada com sucesso'
+                title: 'Tarefa cadastrada.',
             })
 
-        } catch (error) {
+        }   catch (error) {
             console.warn(error);
             const { response } = error;
             if (response?.status === 400) {
@@ -46,13 +45,33 @@ const TaskCreatePage = () => {
                 });
             } else {
                 Modal.error({
-                    title: 'Não foi cadastrar-se, tente novamente mais tarde.'
+                    title: 'Não foi possível cadastrar, tente novamente mais tarde.'
                 })
             }
-        } finally {
-            setLoadsing(false);
+        }   finally {
+            setLoading(false);
         }
-    }, [formValues]
+    }, [formValues]);
+
+    const handleInputChange = useCallback((event) => {
+        const { value } = event.target;
+
+        setFormValues({
+            ...formValues,
+            titulo: value,
+        })
+    }, [formValues]);
+
+    const handleInputCheckbox = useCallback((event) => {
+
+        const { checked } = event.target;
+        
+        setFormValues({
+            ...formValues,
+            concluida: checked,
+        })
+    }, [formValues])
+
     return (
         <Content>
             <Row
@@ -66,32 +85,41 @@ const TaskCreatePage = () => {
                         >
                             Criar Tarefa
                         </Title>
+
                         <Form layout="vertical">
+
                             <InputText
                                 name="secondary"
                                 label="Título"
                                 size="large"
-                                // onChange={}
+                                validate={validateTitulo}
+                                onChange={handleInputChange}
                                 validate={validateTitulo}
                                 required
                             />
-                            <Checkbox>
+
+                            <Checkbox
+                              title="Concluida"
+                              dataIndex="concluida"
+                              key="concluida"
+                              onChange={handleInputCheckbox}
+                            >
                                 Concluído
                             </Checkbox>
+
                             <Button
                                 block
-                                type="primary"
+                                type="primary"  
                                 size="large"
-                            // onClick={}
-                            // loading={loading}
+                                onClick={handleSubscription}
+                                loading={loading}
                             >
                                 Cadastrar
                             </Button>
 
                         </Form>
                     </Card>
-                </Col>
-
+                </Col>  
             </Row>
         </Content>
     )
