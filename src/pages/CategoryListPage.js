@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
-import { Layout, Row, Col, Table, Modal, Button } from "antd";
+import { useCallback,useEffect, useState } from "react";
+import { Layout, Row, Col, Table, Modal } from "antd";
 import axios from "axios";
+
 const { Content } = Layout;
 
 const { Column } = Table;
@@ -9,28 +10,66 @@ const CategoryListPage = () => {
     const [category, setCategory] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    const requestCategory = async () =>{
-        try{
+    const requestCategory = async () => {
+        try {
             setLoading(true);
-            const response = await axios.get('/categoria')
+            const response = await axios.get('/tarefas/categorias/listar')
+            console.log(response.data)
             setCategory(response.data);
-        } catch (error){
+        } catch (error) {
             console.warn(error);
             Modal.error({
-                title: "Não foi possivel carregar suas categias"
+                title: "Não foi possível carregar suas categorias, tente novamente mais tarde."
             })
+        } finally {
+            setLoading(false);
         }
-
     }
+    useEffect(() => {
+        requestCategory();
+    }, []);
     
-    return(
+    const renderCategoria = useCallback(categoria => {
+        return categoria?.nome
+    }, [])
+
+
+
+    return (
         <Content>
             <Row gutter={[24, 24]} justify="center">
                 <Col span={23}>
-                    <Table 
-                    
+                    <Table
+                        dataSource={category}
+                        pagination={false}
+                        loading={loading}
+                        bordered
                     >
+                        <Column
+                            title="ID"
+                            dataIndex="id"
+                            key="id"
+                        />
+                        <Column
+                            title="Nome"
+                            dataIndex="nome"
+                            key="nome"
+                        />
 
+                        <Column
+                            title="Categoria"
+                            dataIndex="categoria"
+                            key="categoria"
+                            render={renderCategoria}
+                        /> 
+                        <Column
+                            title="Criada em"
+                            dataIndex="data_criacao"
+                            key="data_criacao"
+                            render={dataCriacao => {
+                                return new Date(dataCriacao).toLocaleString();
+                            }}
+                        />
                     </Table>
                 </Col>
             </Row>

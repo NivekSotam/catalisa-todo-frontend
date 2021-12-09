@@ -1,5 +1,5 @@
 import {
-    Button, Card,
+    Button, Card,input ,
     Col, Form, Layout, Row,
     Typography, Modal, Checkbox
 } from 'antd';
@@ -22,13 +22,14 @@ const TaskCreatePage = () => {
     const handleSubscription = useCallback(async () => {
         try {
             setLoading(true);
-            console.log({ formValues });
-            const { titulo, concluida } = formValues;
+            // console.log({ formValues });
+            const { titulo, concluida, categoria_id } = formValues;
             if (!titulo) return;
 
             const body = {
                 titulo: titulo,
-                concluida: concluida
+                concluida: concluida,
+                categoria_id: categoria_id
             }
 
             await axios.post('/tarefas', body);
@@ -72,6 +73,14 @@ const TaskCreatePage = () => {
         })
     }, [formValues])
 
+    const handleInputChangeCategory = useCallback((event) => {
+        const { value } = event.target
+        setFormValues({
+            ...formValues,
+            categoria_id: value,
+        })
+    }, [formValues]);
+
     return (
         <Content>
             <Row
@@ -89,13 +98,22 @@ const TaskCreatePage = () => {
                         <Form layout="vertical">
 
                             <InputText
-                                name="secondary"
+                                name="titulo"
                                 label="Título"
+                                key="titulo" 
                                 size="large"
-                                validate={validateTitulo}
                                 onChange={handleInputChange}
                                 validate={validateTitulo}
                                 required
+                            />
+                            
+                            <InputText 
+                                name="categoria_id"
+                                label="Categoria"
+                                size="largue"
+                                onChange={handleInputChangeCategory}
+                                validate={validateTitulo}
+                                disabled={loading}
                             />
 
                             <Checkbox
@@ -106,7 +124,6 @@ const TaskCreatePage = () => {
                             >
                                 Concluído
                             </Checkbox>
-
                             <Button
                                 block
                                 type="primary"  

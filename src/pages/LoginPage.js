@@ -6,11 +6,13 @@ import {
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
-
 import Logo from '../assets/catalisa.png';
 import InputText from '../components/InputText';
 import { validateEmail, validatePassword } from '../helpers/validation-helper';
 import LocalStorageHelper from '../helpers/localstorage-helper';
+import CategoryListPage from '../pages/CategoryListPage';
+import CategoryCreatePage from '../pages/CategoryCreatePage';
+
 
 const { Content } = Layout;
 const { Title } = Typography;

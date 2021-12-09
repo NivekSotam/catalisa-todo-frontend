@@ -82,6 +82,11 @@ const TaskListPage = () => {
                                 return new Date(dataCriacao).toLocaleString();
                             }}
                         />
+                        <Column 
+                            title="Categoria"
+                            dataIndex="categoria_id"
+                            key='categoria_id'
+                        />
                         <Column
                             title="Concluída"
                             dataIndex="concluida"
